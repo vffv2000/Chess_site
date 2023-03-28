@@ -10,5 +10,5 @@ urlpatterns=[
     path('play/',play,name= 'play'),
     path('about/', about, name='about'),
     path('post/<slug:post_slug>/',show_post,name='post'),
-    path('category/<int:cat_id>/',show_category,name='category'),
+    path('category/<slug:cat_slug>/',show_category,name='category'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

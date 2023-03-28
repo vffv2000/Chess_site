@@ -49,14 +49,15 @@ def show_post(request,post_slug):
     }
     return render(request,'chess/post.html', context=context)
 
-def show_category(request,cat_id):
-    posts = masters.objects.filter(cat_id=cat_id)
-    if len(posts)==0:
+def show_category(request,cat_slug):
+    cat = Category.objects.filter(slug=cat_slug)
+    posts = masters.objects.filter(cat_id=cat[0].id)
+    if len(posts) == 0:
         raise Http404()
     context = {
         'posts': posts,
         'title': 'Отображение по рубрикам',
         'menu': menu,
-        'cat_selected': 0,
+        'cat_selected': cat[0].id,
     }
     return render(request, 'chess/index.html', context=context)
