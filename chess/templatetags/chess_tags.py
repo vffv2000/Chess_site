@@ -3,12 +3,13 @@ from chess.models import *
 
 register = template.Library()
 
+
 @register.simple_tag(name='getcats')
 def get_categories():
     return Category.objects.all()
 
 
-@register.inclusion_tag('chess/list_catigories.html')#для отображения бара слева с меню поключаестся так в html{% show_category %}
+@register.inclusion_tag('chess/list_catigories.html')  # для отображения бара слева в html{% show_category %}
 def show_category(sort=None, cat_selected=0):
     if not sort:
         cats = Category.objects.all()
