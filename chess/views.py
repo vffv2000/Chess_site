@@ -1,29 +1,19 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, Http404
-from .models import *
+from django.shortcuts import render
+from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
+from .utils import *
 
 
+class ChessHome(DataMixin, ListView):
 
-menu=[{'title':"О сайте",'url_name':'about'},
-      {'title':"Играть",'url_name':'play'},
-      {'title':"Топ игроков",'url_name':'ScoreList'},
-      {'title': "О сайте", 'url_name': 'about'},
-      {'title':"Войти",'url_name':'login'},
-
-      ]
-
-
-class ChessHome(ListView):
     model = masters
-    template_name = 'chess/index.html' # для того чтобы класс ссылался на наш шаблон
-    context_object_name = 'posts' # Для того чтобы сайт использовал нашу переменную в шаблоне
-    extra_context = {'title': 'Главная страница'}
+    template_name = 'chess/index.html'  # для того чтобы класс ссылался на наш шаблон
+    context_object_name = 'posts'  # Для того чтобы сайт использовал нашу переменную в шаблоне
 
-    def get_context_data(self, *, object_list=None, **kwargs): #чтобы передать в класс денамический спиоск
-        context = super().get_context_data(**kwargs) # распаковка словаря
-        context['menu']= menu                       # Добавляем наше меню в словарь
-        return context
+    def get_context_data(self, *, object_list=None, **kwargs):  # чтобы передать в класс денамический спиоск
+        context = super().get_context_data(**kwargs)  # распаковка словаря
+        c_def = self.get_user_context(title='Главная страница')  # получаем инфу из нашего datamixin
+        return dict(list(context.items()) + list(c_def.items()))  # формируем общий контект
 
     def get_queryset(self):                        # чтобы отображать не все статьи а только которые опубликованы
         return masters.objects.filter(is_published=True)
@@ -41,7 +31,7 @@ class ChessHome(ListView):
 #     return render(request,'chess/index.html',context=context)
 
 
-def ScoreList(request):
+def scoreList (request):
     posts = masters.objects.all()
     return render(request,'chess/TopScore.html',{'posts':posts ,'title': 'Топ', 'menu': menu,})
 
@@ -56,17 +46,16 @@ def about(request):
     posts = masters.objects.all()
     return render(request,'chess/about.html',{'posts':posts ,'title': 'Топ', 'menu': menu,})
 
-class ShowPost(DetailView):
+class ShowPost( DataMixin, DetailView ):
     model = masters
     template_name = 'chess/post.html'
     slug_url_kwarg = 'post_slug'
-    context_object_name = 'posts'
+    context_object_name = 'post'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = context['post']
-        context['menu']= menu
-        return context
+        c_def = self.get_user_context(title=context['post'])
+        return dict(list(context.items()) + list(c_def.items()))
 
 # def show_post(request,post_slug):
 #     post = get_object_or_404(masters, slug=post_slug)
@@ -79,7 +68,7 @@ class ShowPost(DetailView):
 #     }
 #     return render(request,'chess/post.html', context=context)
 
-class ChessCategory(ListView):
+class ChessCategory(DataMixin, ListView):
     model = masters
     template_name = 'chess/index.html'
     context_object_name = 'posts'
@@ -90,10 +79,9 @@ class ChessCategory(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Категория - ' + str(context['posts'][0].cat)
-        context['cat_selected'] = context['posts'][0].cat
-        context['menu']= menu
-        return context
+        c_def = self.get_user_context(title='Категория - ' + str(context['posts'][0].cat),
+                                      cat_selected=context['posts'][0].cat_id)
+        return dict(list(context.items()) + list(c_def.items()))
 
 # def show_category(request,cat_slug):
 #     cat = Category.objects.filter(slug=cat_slug)
