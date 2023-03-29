@@ -8,6 +8,7 @@ from .models import *
 menu=[{'title':"О сайте",'url_name':'about'},
       {'title':"Играть",'url_name':'play'},
       {'title':"Топ игроков",'url_name':'ScoreList'},
+      {'title': "О сайте", 'url_name': 'about'},
       {'title':"Войти",'url_name':'login'},
 
       ]
@@ -33,10 +34,12 @@ def login(request):
     return HttpResponse("login")
 
 def play(request):
-    return HttpResponse("play")
+    posts = masters.objects.all()
+    return render(request, 'chess/play.html', {'posts': posts, 'title': 'Топ', 'menu': menu, })
 
 def about(request):
-    return HttpResponse("about")
+    posts = masters.objects.all()
+    return render(request,'chess/about.html',{'posts':posts ,'title': 'Топ', 'menu': menu,})
 
 def show_post(request,post_slug):
     post = get_object_or_404(masters, slug=post_slug)
