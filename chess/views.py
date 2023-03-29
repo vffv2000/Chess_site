@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 from .models import *
-
+from django.views.generic import ListView
 
 
 
@@ -13,17 +13,32 @@ menu=[{'title':"О сайте",'url_name':'about'},
 
       ]
 
-def index(request):
-    posts=masters.objects.all()
-    cats=Category.objects.all()
-    context={
-        'posts': posts,
-        'cats':cats,
-        'title': 'Главная страница',
-        'menu': menu,
-        'cat_selected':0,
-    }
-    return render(request,'chess/index.html',context=context)
+
+class ChessHome(ListView):
+    model = masters
+    template_name = 'chess/index.html' # для того чтобы класс ссылался на наш шаблон
+    context_object_name = 'posts' # Для того чтобы сайт использовал нашу переменную в шаблоне
+    extra_context = {'title': 'Главная страница'}
+
+    def get_context_data(self, *, object_list=None, **kwargs): #чтобы передать в класс денамический спиоск
+        context = super().get_context_data(**kwargs) # распаковка словаря
+        context['menu']= menu                       # Добавляем наше меню в словарь
+        return context
+
+    def get_queryset(self):                        # чтобы отображать не все статьи а только которые опубликованы
+        return masters.objects.filter(is_published=True)
+
+# def index(request):
+#     posts=masters.objects.all()
+#     cats=Category.objects.all()
+#     context={
+#         'posts': posts,
+#         'cats':cats,
+#         'title': 'Главная страница',
+#         'menu': menu,
+#         'cat_selected':0,
+#     }
+#     return render(request,'chess/index.html',context=context)
 
 
 def ScoreList(request):
