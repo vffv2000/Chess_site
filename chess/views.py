@@ -56,16 +56,28 @@ def about(request):
     posts = masters.objects.all()
     return render(request,'chess/about.html',{'posts':posts ,'title': 'Топ', 'menu': menu,})
 
-def show_post(request,post_slug):
-    post = get_object_or_404(masters, slug=post_slug)
+class ShowPost(DetailView):
+    model = masters
+    template_name = 'chess/post.html'
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'posts'
 
-    context={
-        'post': post,
-        'title': post.title,
-        'menu': menu,
-        'cat_selected': post.cat_id,
-    }
-    return render(request,'chess/post.html', context=context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = context['post']
+        context['menu']= menu
+        return context
+
+# def show_post(request,post_slug):
+#     post = get_object_or_404(masters, slug=post_slug)
+#
+#     context={
+#         'post': post,
+#         'title': post.title,
+#         'menu': menu,
+#         'cat_selected': post.cat_id,
+#     }
+#     return render(request,'chess/post.html', context=context)
 
 class ChessCategory(ListView):
     model = masters
