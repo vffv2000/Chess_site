@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 from .models import *
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 
 
@@ -67,15 +67,31 @@ def show_post(request,post_slug):
     }
     return render(request,'chess/post.html', context=context)
 
-def show_category(request,cat_slug):
-    cat = Category.objects.filter(slug=cat_slug)
-    posts = masters.objects.filter(cat_id=cat[0].id)
-    if len(posts) == 0:
-        raise Http404()
-    context = {
-        'posts': posts,
-        'title': 'Отображение по рубрикам',
-        'menu': menu,
-        'cat_selected': cat[0].id,
-    }
-    return render(request, 'chess/index.html', context=context)
+class ChessCategory(ListView):
+    model = masters
+    template_name = 'chess/index.html'
+    context_object_name = 'posts'
+    allow_empty = False
+
+    def get_queryset(self):
+        return masters.objects.filter(cat__slug=self.kwargs['cat_slug'],is_published=True)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Категория - ' + str(context['posts'][0].cat)
+        context['cat_selected'] = context['posts'][0].cat
+        context['menu']= menu
+        return context
+
+# def show_category(request,cat_slug):
+#     cat = Category.objects.filter(slug=cat_slug)
+#     posts = masters.objects.filter(cat_id=cat[0].id)
+#     if len(posts) == 0:
+#         raise Http404()
+#     context = {
+#         'posts': posts,
+#         'title': 'Отображение по рубрикам',
+#         'menu': menu,
+#         'cat_selected': cat[0].id,
+#     }
+#     return render(request, 'chess/index.html', context=context)
