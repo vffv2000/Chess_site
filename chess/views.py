@@ -13,7 +13,8 @@ class ChessHome(DataMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):  # чтобы передать в класс денамический спиcок
         context = super().get_context_data(**kwargs)  # распаковка словаря
         c_def = self.get_user_context(title='Главная страница')  # получаем инфу из нашего data-mixin
-        return dict(list(context.items()) + list(c_def.items()))  # формируем общий контект
+        return context | c_def  # формируем общий контект
+
 
     def get_queryset(self):                        # чтобы отображать не все статьи а только которые опубликованы
         return Masters.objects.filter(is_published=True)
@@ -59,7 +60,7 @@ class ShowPost(DataMixin, DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title=context['post'])
-        return dict(list(context.items()) + list(c_def.items()))
+        return context | c_def
 
 # def show_post(request,post_slug):
 #     post = get_object_or_404(Masters, slug=post_slug)
@@ -86,7 +87,7 @@ class ChessCategory(DataMixin, ListView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Категория - ' + str(context['posts'][0].cat),
                                       cat_selected=context['posts'][0].cat_id)
-        return dict(list(context.items()) + list(c_def.items()))
+        return context | c_def
 
 # def show_category(request,cat_slug):
 #     cat = Category.objects.filter(slug=cat_slug)
