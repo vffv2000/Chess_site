@@ -3,13 +3,14 @@ from .models import *
 
 menu = [{'title': "О сайте", 'url_name': 'about'},
         {'title': "Играть", 'url_name': 'play'},
-        {'title': "Топ игроков", 'url_name': 'ScoreList'},
+        {'title': "Топ игроков", 'url_name': 'Scorelist'},
         {'title': "О сайте", 'url_name': 'about'},
         {'title': "Войти", 'url_name': 'login'},
         ]
 
 
 class DataMixin:
+    paginate_by = 3
     def get_user_context(self, **kwargs):  # создаёт контекст для шаблона
         context = kwargs  # начальный словарь
         cats = Category.objects.all()

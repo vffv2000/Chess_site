@@ -5,7 +5,7 @@ from .views import *
 
 urlpatterns = [
     path('', ChessHome.as_view(), name='home'),
-    path('Top/', scoreList, name='ScoreList'),
+    path('Top/', scorelist, name='Scorelist'),
     path('login/', login, name='login'),
     path('play/', play, name='play'),
     path('about/', about, name='about'),

@@ -47,4 +47,4 @@ class Masters(models.Model):
     class Meta:
         verbose_name = "Известные шахматисты"
         verbose_name_plural = "Известные шахматисты"
-        ordering = ['time_create']
+        ordering = ['-time_create']
