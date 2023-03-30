@@ -7,6 +7,7 @@ urlpatterns = [
     path('', ChessHome.as_view(), name='home'),
     path('Top/', scorelist, name='Scorelist'),
     path('login/', login, name='login'),
+    path('register/', RegisterUser.as_view(), name='register'),
     path('play/', play, name='play'),
     path('about/', about, name='about'),
     path('post/<slug:post_slug>/', ShowPost.as_view(), name='post'),
