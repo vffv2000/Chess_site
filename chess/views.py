@@ -15,8 +15,7 @@ class ChessHome(DataMixin, ListView):
         c_def = self.get_user_context(title='Главная страница')  # получаем инфу из нашего data-mixin
         return context | c_def  # формируем общий контект
 
-
-    def get_queryset(self):                        # чтобы отображать не все статьи а только которые опубликованы
+    def get_queryset(self):  # чтобы отображать не все статьи а только которые опубликованы
         return Masters.objects.filter(is_published=True)
 
 # def index(request):
@@ -32,7 +31,7 @@ class ChessHome(DataMixin, ListView):
 #     return render(request,'chess/index.html',context=context)
 
 
-def scoreList(request):
+def scorelist(request):
     posts = Masters.objects.all()
     return render(request, 'chess/TopScore.html', {'posts': posts, 'title': 'Топ', 'menu': menu, })
 
