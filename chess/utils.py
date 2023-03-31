@@ -5,7 +5,6 @@ menu = [{'title': "О сайте", 'url_name': 'about'},
         {'title': "Играть", 'url_name': 'play'},
         {'title': "Топ игроков", 'url_name': 'Scorelist'},
         {'title': "О сайте", 'url_name': 'about'},
-        {'title': "Войти", 'url_name': 'login'},
         ]
 
 
