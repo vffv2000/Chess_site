@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from django.contrib.auth import logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 
-from .forms import RegisterUserForm
+from .forms import RegisterUserForm, LoginUserForm
 from .utils import *
 
 
@@ -37,10 +40,6 @@ class ChessHome(DataMixin, ListView):
 def scorelist(request):
     posts = Masters.objects.all()
     return render(request, 'chess/TopScore.html', {'posts': posts, 'title': 'Топ', 'menu': menu, })
-
-
-def login(request):
-    return HttpResponse("login")
 
 
 def play(request):
@@ -113,4 +112,23 @@ class RegisterUser(DataMixin, CreateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Регистрация")
-        return dict(list(context.items()) + list(c_def.items()))
+        return context | c_def
+
+
+class LoginUser(DataMixin, LoginView):
+    form_class = LoginUserForm
+    template_name = 'chess/login.html'
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Авторизация")
+        return context | c_def
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
