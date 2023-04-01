@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chess.apps.ChessConfig',
     'captcha',
+    'rest_framework',
 
 ]
 
