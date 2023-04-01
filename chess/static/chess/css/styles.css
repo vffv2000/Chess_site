@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 html, body {
 	font-family: 'Arial';
 	margin: 0;
@@ -432,3 +433,74 @@ ul.lang-list li a:hover {color: #fdc073;}
     border-radius: 20px;
     border: 1px solid #3F4137;
 }
+.hexagon-wrapper {
+
+    margin: auto;
+    display: flex;
+    text-align: initial;
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+}
+
+.hexagon {
+    margin: 50px;
+    position: relative;
+    width: 46%;
+    height: 80%;
+    margin: auto;
+    color: #E6D5B9;
+    background: linear-gradient(-180deg, #4E3835, #ada18d);
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    transition: 0.5s;
+
+}
+.hexagon a{
+    margin: auto;
+    font-size: 50px;
+    color: transparent;
+    background: linear-gradient(45deg, #3a2425, #e50038);
+    background-clip: content-box;
+  -webkit-background-clip: text;
+    z-index: 5;
+}
+
+
+.hexagon:before,
+.hexagon:after {
+    position: absolute;
+    content: "";
+    background: inherit;
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+    transition: 0.5s;
+    transform-origin: center;
+
+}
+.hexagon:before {
+     transform: rotateZ(60deg);
+    ;
+}
+.hexagon:after {
+    transform: rotateZ(-60deg);
+
+}
+.hexagon:hover {
+    border-radius: 50px;
+    transition: 0.5s;
+
+}
+.hexagon:hover:before {
+    border-radius: 50px;
+    transition: 0.5s;
+
+}
+.hexagon:hover:after {
+    border-radius: 50px;
+    transition: 0.5s;
+
+}
+
