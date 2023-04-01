@@ -17,9 +17,10 @@ from django.contrib import admin
 from django.urls import path,include
 from chess.views import *
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
-    path('',include('chess.urls'))
-
+    path('',include('chess.urls')),
+    path('api/v1/list', ChessAPIView.as_view())
 ]
