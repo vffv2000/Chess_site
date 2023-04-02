@@ -1,9 +1,13 @@
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
+from django.forms import model_to_dict
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .forms import RegisterUserForm, LoginUserForm
 from .serializers import MastersSerializer
 from .utils import *
@@ -104,3 +108,15 @@ def logout_user(request):
 class ChessAPIView(generics.ListAPIView):
     queryset = Masters.objects.all()
     serializer_class = MastersSerializer
+
+class ChessAPIView2(APIView):
+    def get(self,request):
+        lst= Masters.objects.all().values()
+        return Response({'posts': list(lst)})
+    def post(self,request):
+        post_new = Masters.objects.create(
+            title=request.data['title'],
+            content=request.data['content'],
+            cat_id=request.data['cat_id'],
+        )
+        return Response({'post': model_to_dict(post_new)})
