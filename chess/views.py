@@ -109,7 +109,7 @@ class ChessAPIView(generics.ListAPIView):
     queryset = Masters.objects.all()
     serializer_class = MastersSerializer
 
-class ChessAPIView2(APIView):
+class м(APIView):
     def get(self, request):
         w = Masters.objects.all()
         return Response({'posts': MastersSerializer(w, many=True).data})
@@ -117,12 +117,34 @@ class ChessAPIView2(APIView):
     def post(self, request):
         serializer = MastersSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-        post_new = Masters.objects.create(
-            title=request.data['title'],
-            slug=request.data['slug'],
-            content=request.data['content'],
-            cat_id=request.data['cat_id']
-        )
+        return Response({'post': serializer.data})
 
-        return Response({'post': MastersSerializer(post_new).data})
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)  # определяем запись котурую нужно поменять
+        if not pk:  # проверяем есть ли ключ
+            return Response({"error": "Method PUT not allowed"})
+
+        try:
+            instance = Masters.objects.get(pk=pk)  # Получаем запись по этому ключу
+        except:
+            return Response({"error": "Object does not exists"})
+
+        serializer = MastersSerializer(data=request.data, instance=instance)  # создаём сериал
+        serializer.is_valid(raise_exception=True)  # проверяем данные
+        serializer.save()
+        return Response({"post": serializer.data})  # отправил запрос в виде json строки
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            return Response({"error": "Method DELETE not allowed"})
+
+        try:
+            instance = Masters.objects.get(pk=pk)  # Получаем запись по этому ключу
+            instance.delete()  # Удаляем запись из базы данных
+        except Masters.DoesNotExist:
+            return Response({"error": "Object does not exists"})
+
+        return Response({"post": "delete post " + str(pk)})
