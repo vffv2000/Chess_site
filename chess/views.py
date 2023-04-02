@@ -110,13 +110,19 @@ class ChessAPIView(generics.ListAPIView):
     serializer_class = MastersSerializer
 
 class ChessAPIView2(APIView):
-    def get(self,request):
-        lst= Masters.objects.all().values()
-        return Response({'posts': list(lst)})
-    def post(self,request):
+    def get(self, request):
+        w = Masters.objects.all()
+        return Response({'posts': MastersSerializer(w, many=True).data})
+
+    def post(self, request):
+        serializer = MastersSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         post_new = Masters.objects.create(
             title=request.data['title'],
+            slug=request.data['slug'],
             content=request.data['content'],
-            cat_id=request.data['cat_id'],
+            cat_id=request.data['cat_id']
         )
-        return Response({'post': model_to_dict(post_new)})
+
+        return Response({'post': MastersSerializer(post_new).data})
