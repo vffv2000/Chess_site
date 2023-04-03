@@ -18,8 +18,8 @@ from django.urls import path,include
 from chess.views import *
 from rest_framework import routers
 
-router = routers.SimpleRouter()
-router.register(r'masters',ChessViewSet)
+router = routers.DefaultRouter()
+router.register(r'masters',ChessViewSet,basename='masters')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
