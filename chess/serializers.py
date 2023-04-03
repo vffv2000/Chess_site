@@ -27,6 +27,8 @@ from .models import *
 #         return instance
 
 class MastersSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault()) # скрытое поле
     class Meta:
         model = Masters
-        fields = ('title', 'slug', 'content', 'is_published', 'cat')
+        fields = ('id','title', 'slug', 'content', 'is_published', 'user', 'cat')
+
