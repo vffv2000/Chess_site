@@ -4,7 +4,7 @@ from django.forms import model_to_dict
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -105,16 +105,20 @@ def logout_user(request):
     return redirect('login')
 
 
-class ChessAPIList(generics.ListAPIView):  # реализует два метода гет и пост (базовый класс фреймворка)
+class ChessViewSet(viewsets.ModelViewSet):
     queryset = Masters.objects.all()
     serializer_class = MastersSerializer
 
-
-class ChessAPIUpdate(generics.UpdateAPIView):  # реализует два метода post patch (базовый класс фреймворка)
-    queryset = Masters.objects.all()
-    serializer_class = MastersSerializer
-
-
-class ChessAPIDetailView(generics.RetrieveUpdateDestroyAPIView):  # получаем изменяем и удаляем
-    queryset = Masters.objects.all()
-    serializer_class = MastersSerializer
+# class ChessAPIList(generics.ListAPIView):  # реализует два метода гет и пост (базовый класс фреймворка)
+#     queryset = Masters.objects.all()
+#     serializer_class = MastersSerializer
+#
+#
+# class ChessAPIUpdate(generics.UpdateAPIView):  # реализует два метода post patch (базовый класс фреймворка)
+#     queryset = Masters.objects.all()
+#     serializer_class = MastersSerializer
+#
+#
+# class ChessAPIDetailView(generics.RetrieveUpdateDestroyAPIView):  # получаем изменяем и удаляем
+#     queryset = Masters.objects.all()
+#     serializer_class = MastersSerializer
