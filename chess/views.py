@@ -6,10 +6,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from rest_framework import generics, viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .forms import RegisterUserForm, LoginUserForm
+from .permissions import IsOwnerOrReadOnly
 from .serializers import MastersSerializer
 from .utils import *
 
@@ -107,16 +109,34 @@ def logout_user(request):
     return redirect('login')
 
 
-class ChessViewSet(viewsets.ModelViewSet):
+class ChessAPIList(generics.ListCreateAPIView): # возввращает список
+    queryset = Masters.objects.all()
     serializer_class = MastersSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, ) # Добавляют записи только авториованный пользователи
 
-    def get_queryset(self):
-        pk = self.kwargs.get('pk')
-        if not pk:
-            return Masters.objects.all()[:3]
-        return Masters.objects.filter(pk=pk)
 
-    @action(methods=['get'], detail=True)
-    def category(self, request, pk=None):
-        cats = Category.objects.get(pk=pk)
-        return Response({'cats': cats.name})
+class ChessAPIUpdate(generics.RetrieveUpdateAPIView): # обновляет
+    queryset = Masters.objects.all()
+    serializer_class = MastersSerializer
+    permission_classes = (IsOwnerOrReadOnly, )
+
+
+class ChessAPIDestroy(generics.RetrieveDestroyAPIView): # удялет
+    queryset = Masters.objects.all()
+    serializer_class = MastersSerializer
+    permission_classes = (IsAdminUser, )  # только админ
+
+
+# class ChessViewSet(viewsets.ModelViewSet):
+#     serializer_class = MastersSerializer
+#
+#     def get_queryset(self):
+#         pk = self.kwargs.get('pk')
+#         if not pk:
+#             return Masters.objects.all()[:3]
+#         return Masters.objects.filter(pk=pk)
+#
+#     @action(methods=['get'], detail=True)
+#     def category(self, request, pk=None):
+#         cats = Category.objects.get(pk=pk)
+#         return Response({'cats': cats.name})
