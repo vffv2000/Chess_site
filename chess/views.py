@@ -105,11 +105,12 @@ def logout_user(request):
     return redirect('login')
 
 
-class ChessAPIView(generics.ListAPIView):
+class ChessAPIList(generics.ListAPIView):  # реализует два метода гет и пост (базовый класс фреймворка)
     queryset = Masters.objects.all()
     serializer_class = MastersSerializer
 
-class м(APIView):
+
+class ChessAPIView2(APIView):
     def get(self, request):
         w = Masters.objects.all()
         return Response({'posts': MastersSerializer(w, many=True).data})
