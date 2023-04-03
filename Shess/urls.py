@@ -16,13 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from chess.views import *
+from rest_framework import routers
 
+router = routers.SimpleRouter()
+router.register(r'masters',ChessViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
     path('',include('chess.urls')),
-    path('api/v1/APIList', ChessAPIList.as_view()),
-    path('api/v1/Masterslist/<int:pk>/', ChessAPIUpdate.as_view()),
-    path('api/v1/Mastersdetail/<int:pk>/', ChessAPIDetailView.as_view()),
+    path('api/v1/',include(router.urls))  # http://127.0.0.1:8000/api/v1/masters
 ]
