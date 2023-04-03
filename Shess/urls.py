@@ -22,8 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
     path('',include('chess.urls')),
-    path('api/v1/list', ChessAPIView.as_view()),
-    path('api/v1/str', ChessAPIView2.as_view()),
     path('api/v1/APIList', ChessAPIList.as_view()),
-    path('api/v1/Masterslist/<int:pk>/', ChessAPIView2.as_view()),
+    path('api/v1/Masterslist/<int:pk>/', ChessAPIUpdate.as_view()),
+    path('api/v1/Mastersdetail/<int:pk>/', ChessAPIDetailView.as_view()),
 ]
