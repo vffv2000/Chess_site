@@ -134,10 +134,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = []
 
-#управление глобальными настройками рест
+# управление глобальными настройками рест
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',          #  браузерное апи
+        'rest_framework.renderers.BrowsableAPIRenderer',  # браузерное апи
     ]
 }

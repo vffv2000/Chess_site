@@ -87,6 +87,7 @@ class RegisterUser(DataMixin, CreateView):
         login(self.request, user)
         return redirect('home')
 
+
 class LoginUser(DataMixin, LoginView):
     form_class = LoginUserForm
     template_name = 'chess/login.html'
@@ -110,12 +111,12 @@ class ChessViewSet(viewsets.ModelViewSet):
     serializer_class = MastersSerializer
 
     def get_queryset(self):
-        pk=self.kwargs.get('pk')
+        pk = self.kwargs.get('pk')
         if not pk:
             return Masters.objects.all()[:3]
         return Masters.objects.filter(pk=pk)
 
     @action(methods=['get'], detail=True)
-    def category(self, request,pk=None):
+    def category(self, request, pk=None):
         cats = Category.objects.get(pk=pk)
         return Response({'cats': cats.name})

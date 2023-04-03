@@ -29,4 +29,4 @@ from .models import *
 class MastersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Masters
-        fields = ('title', 'slug', 'content','is_published', 'cat')
+        fields = ('title', 'slug', 'content', 'is_published', 'cat')
