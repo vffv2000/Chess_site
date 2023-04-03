@@ -110,42 +110,11 @@ class ChessAPIList(generics.ListAPIView):  # реализует два мето�
     serializer_class = MastersSerializer
 
 
-class ChessAPIView2(APIView):
-    def get(self, request):
-        w = Masters.objects.all()
-        return Response({'posts': MastersSerializer(w, many=True).data})
+class ChessAPIUpdate(generics.UpdateAPIView):  # реализует два метода post patch (базовый класс фреймворка)
+    queryset = Masters.objects.all()
+    serializer_class = MastersSerializer
 
-    def post(self, request):
-        serializer = MastersSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
 
-        return Response({'post': serializer.data})
-
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)  # определяем запись котурую нужно поменять
-        if not pk:  # проверяем есть ли ключ
-            return Response({"error": "Method PUT not allowed"})
-
-        try:
-            instance = Masters.objects.get(pk=pk)  # Получаем запись по этому ключу
-        except:
-            return Response({"error": "Object does not exists"})
-
-        serializer = MastersSerializer(data=request.data, instance=instance)  # создаём сериал
-        serializer.is_valid(raise_exception=True)  # проверяем данные
-        serializer.save()
-        return Response({"post": serializer.data})  # отправил запрос в виде json строки
-
-    def delete(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response({"error": "Method DELETE not allowed"})
-
-        try:
-            instance = Masters.objects.get(pk=pk)  # Получаем запись по этому ключу
-            instance.delete()  # Удаляем запись из базы данных
-        except Masters.DoesNotExist:
-            return Response({"error": "Object does not exists"})
-
-        return Response({"post": "delete post " + str(pk)})
+class ChessAPIDetailView(generics.RetrieveUpdateDestroyAPIView):  # получаем изменяем и удаляем
+    queryset = Masters.objects.all()
+    serializer_class = MastersSerializer
