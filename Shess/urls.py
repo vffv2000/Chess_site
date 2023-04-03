@@ -18,12 +18,15 @@ from django.urls import path,include
 from chess.views import *
 from rest_framework import routers
 
-router = routers.DefaultRouter()
-router.register(r'masters',ChessViewSet,basename='masters')
+# router = routers.DefaultRouter()
+# router.register(r'masters',ChessViewSet,basename='masters')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),
     path('',include('chess.urls')),
-    path('api/v1/',include(router.urls))  # http://127.0.0.1:8000/api/v1/masters
+    path('api/v1/Chess/', ChessAPIList.as_view()),
+    path('api/v1/Chess/<int:pk>/', ChessAPIUpdate.as_view()),
+    path('api/v1/Chessdelete/<int:pk>/', ChessAPIDestroy.as_view()),
+    # path('api/v1/',include(router.urls))  # http://127.0.0.1:8000/api/v1/masters
 ]
