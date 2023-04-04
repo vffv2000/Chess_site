@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from rest_framework import generics, viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -109,10 +110,17 @@ def logout_user(request):
     return redirect('login')
 
 
+class ChessAPIListPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 5
+
+
 class ChessAPIList(generics.ListCreateAPIView): # возввращает список
     queryset = Masters.objects.all()
     serializer_class = MastersSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, ) # Добавляют записи только авториованный пользователи
+    pagination_class = ChessAPIListPagination
 
 
 class ChessAPIUpdate(generics.RetrieveUpdateAPIView): # обновляет
