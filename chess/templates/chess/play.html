@@ -1,4 +1,6 @@
 {% extends 'chess/base.html' %}
+
 {% block content %}
-<h1>Play</h1>
+  <h1>Шахматная доска</h1>
+  {{ svg_board|safe }}
 {% endblock %}

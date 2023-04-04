@@ -10,11 +10,14 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import render
 
 from .forms import RegisterUserForm, LoginUserForm
 from .permissions import IsOwnerOrReadOnly
 from .serializers import MastersSerializer
 from .utils import *
+
+from django.shortcuts import render
 
 
 class ChessHome(DataMixin, ListView):
@@ -37,9 +40,15 @@ def scorelist(request):
     return render(request, 'chess/TopScore.html', {'posts': posts, 'title': 'Топ', 'menu': menu, })
 
 
+
+
 def play(request):
     posts = Masters.objects.all()
-    return render(request, 'chess/play.html', {'posts': posts, 'title': 'Топ', 'menu': menu, })
+    # board = mychess.Board()
+    # board_svg = mychess.chess.svg.board(board)
+    # context = {'board_svg': board_svg, 'posts': posts, 'title': 'Топ', 'menu': menu}
+    # return render(request, 'chess/play.html', context)
+    return render(request, 'chess/TopScore.html', {'posts': posts, 'title': 'Топ', 'menu': menu, })
 
 
 def about(request):
@@ -148,3 +157,4 @@ class ChessAPIDestroy(generics.RetrieveDestroyAPIView): # удялет
 #     def category(self, request, pk=None):
 #         cats = Category.objects.get(pk=pk)
 #         return Response({'cats': cats.name})
+
