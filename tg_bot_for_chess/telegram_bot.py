@@ -8,7 +8,7 @@ from aiogram import Bot, Dispatcher, executor, types,__version__
 logging.basicConfig(level=logging.INFO)
 
 # Инициализация бота и диспетчера
-bot = Bot(token='5343231561:AAGB0nKpggD61U7t83sNgW_a0baKCQk2Deo')
+bot = Bot(token='TOKEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNN')
 dp = Dispatcher(bot)
 
 async def start():
