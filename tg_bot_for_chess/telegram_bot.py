@@ -43,6 +43,23 @@ async def handle_error(message, error, count):
         await message.answer("Unknown error occurred")
 
 
+@dp.message_handler(commands=['show'])
+async def send_help(message: types.Message):
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://127.0.0.1:8000/api/v1/Chess/') as resp:
+            data = await resp.json()
+            count = int(data['count'])
+            for i in range(1, count + 1):
+                url = f"http://127.0.0.1:8000/api/v1/Chess/{i}/"
+                async with session.get(url) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        formatted_data = f"<b>ID:</b> <i>{data['id']}</i>\n<b>Title:</b><i> {data['title']}</i>\n<b>Content:</b> <i>{data['content']}</i>\n"
+                        await message.reply(formatted_data, parse_mode=types.ParseMode.HTML)
+                    else:
+                        await message.answer(f"Ошибка {resp.status}")
+
+
 @dp.message_handler(commands=['post'])
 async def send_welcome(message: types.Message):
     async with aiohttp.ClientSession() as session:
@@ -57,12 +74,13 @@ async def send_welcome(message: types.Message):
                 await handle_error(message, e, count)
                 return
             url = f"http://127.0.0.1:8000/api/v1/Chess/{symbol}/"
-            async with session.get(url) as res:
-                if res.status == 200:
+            async with session.get(url) as resp:
+                if resp.status == 200:
                     data = await resp.json()
-                    await message.reply(data)
+                    formatted_data = f"<b>ID:</b> <i>{data['id']}</i>\n<b>Title:</b><i> {data['title']}</i>\n<b>Content:</b> <i>{data['content']}</i>\n"
+                    await message.reply(formatted_data, parse_mode=types.ParseMode.HTML)
                 else:
-                    await message.answer(f"Ошибка {res.status}: {res.text}")
+                    await message.answer(f"Ошибка {resp.status}: {resp.text}")
 
 
 # Обработчик текстовых сообщений
