@@ -1,7 +1,7 @@
 import logging
 import requests
 import aiohttp
-#python tg_bot_for_chess/telegram_bot.py
+# python tg_bot_for_chess/telegram_bot.py
 from aiogram import Bot, Dispatcher, executor, types,__version__
 
 # Установка уровня логирования
