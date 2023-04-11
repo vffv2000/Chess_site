@@ -14,12 +14,20 @@ dp = Dispatcher(bot)
 async def start():
     await dp.start_polling()
 
-# Обработчик команды /start
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-    hel=str(__version__)
-    print(__version__)
-    await message.reply("Привет! Я бот sdfasdfsfsdfasdffdsfsadfTelegram."+hel)
+    await message.reply('<b>Добро пожаловать!</b>\n\nЯ бот, который готов помочь вам с нашей системой. Если вы хотите узнать больше о моих командах, введите <code>/help</code>.',parse_mode=types.ParseMode.HTML)
+
+@dp.message_handler(commands=['help'])
+async def send_help(message: types.Message):
+    help_text = "<b>Доступные команды:</b>\n\n"
+    help_text += "<code>/post id</code> - показать определенную статью\n"
+    help_text += "<code>/show</code> - показать все статьи\n"
+    help_text += "<code>/help</code> - показать список доступных команд\n"
+    await message.reply(help_text,parse_mode=types.ParseMode.HTML)
+
+
+
 
 async def handle_error(message, error, count):
     if isinstance(error, IndexError):
@@ -31,7 +39,7 @@ async def handle_error(message, error, count):
     else:
         await message.answer("Unknown error occurred")
 
-@dp.message_handler(commands=['help'])
+@dp.message_handler(commands=['post'])
 async def send_welcome(message: types.Message):
     async with aiohttp.ClientSession() as session:
         async with session.get('http://127.0.0.1:8000/api/v1/Chess/') as resp:
