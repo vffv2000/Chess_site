@@ -14,9 +14,14 @@ dp = Dispatcher(bot)
 async def start():
     await dp.start_polling()
 
+# Обработчик команды /start
+@dp.message_handler(commands=['start'])
+async def send_welcome(message: types.Message):
+    hel=str(__version__)
+    print(__version__)
+    await message.reply("Привет! Я бот sdfasdfsfsdfasdffdsfsadfTelegram."+hel)
 
-
-async def handle_error(message, error):
+async def handle_error(message, error, count):
     if isinstance(error, IndexError):
         await message.answer("/command int from 0 to {}".format(count))
     elif isinstance(error, ValueError):
@@ -25,15 +30,6 @@ async def handle_error(message, error):
         await message.answer("Article not found")
     else:
         await message.answer("Unknown error occurred")
-
-# Обработчик команды /start
-@dp.message_handler(commands=['start'])
-async def send_welcome(message: types.Message):
-    hel=str(__version__)
-    print(__version__)
-    await message.reply("Привет! Я бот sdfasdfsfsdfasdffdsfsadfTelegram."+hel)
-
-
 
 @dp.message_handler(commands=['help'])
 async def send_welcome(message: types.Message):
@@ -46,7 +42,7 @@ async def send_welcome(message: types.Message):
                 if symbol < 0 or symbol >= count:
                     raise ValueError
             except (IndexError, ValueError, aiohttp.client_exceptions.ClientResponseError) as e:
-                await handle_error(message, e)
+                await handle_error(message, e, count)
                 return
             url = f"http://127.0.0.1:8000/api/v1/Chess/{symbol}/"
             async with session.get(url) as resp:
@@ -55,6 +51,7 @@ async def send_welcome(message: types.Message):
                     await message.reply(data)
                 else:
                     await message.answer(f"Ошибка {resp.status}: {resp.text}")
+
 
 # Обработчик текстовых сообщений
 @dp.message_handler()
