@@ -1,23 +1,27 @@
 import logging
-import requests
 import aiohttp
 # python tg_bot_for_chess/telegram_bot.py
-from aiogram import Bot, Dispatcher, executor, types,__version__
+from aiogram import Bot, Dispatcher, executor, types
 
 # Установка уровня логирования
 logging.basicConfig(level=logging.INFO)
 
 
 # Инициализация бота и диспетчера
-bot = Bot(token='TOKEEEEEEEEEEEEEEEEENNNNNNNNNNNNNNNNN')
+bot = Bot(token='5343231561:AAGB0nKpggD61U7t83sNgW_a0baKCQk2Deo')
 dp = Dispatcher(bot)
+
 
 async def start():
     await dp.start_polling()
 
+
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-    await message.reply('<b>Добро пожаловать!</b>\n\nЯ бот, который готов помочь вам с нашей системой. Если вы хотите узнать больше о моих командах, введите <code>/help</code>.',parse_mode=types.ParseMode.HTML)
+    await message.reply('<b>Добро пожаловать!</b>\n\nЯ бот, который готов помочь вам с нашей системой.'
+                        ' Если вы хотите узнать больше о моих командах, введите <code>/help</code>.',
+                        parse_mode=types.ParseMode.HTML)
+
 
 @dp.message_handler(commands=['help'])
 async def send_help(message: types.Message):
@@ -25,9 +29,7 @@ async def send_help(message: types.Message):
     help_text += "<code>/post id</code> - показать определенную статью\n"
     help_text += "<code>/show</code> - показать все статьи\n"
     help_text += "<code>/help</code> - показать список доступных команд\n"
-    await message.reply(help_text,parse_mode=types.ParseMode.HTML)
-
-
+    await message.reply(help_text, parse_mode=types.ParseMode.HTML)
 
 
 async def handle_error(message, error, count):
@@ -39,6 +41,7 @@ async def handle_error(message, error, count):
         await message.answer("Article not found")
     else:
         await message.answer("Unknown error occurred")
+
 
 @dp.message_handler(commands=['post'])
 async def send_welcome(message: types.Message):
@@ -54,12 +57,12 @@ async def send_welcome(message: types.Message):
                 await handle_error(message, e, count)
                 return
             url = f"http://127.0.0.1:8000/api/v1/Chess/{symbol}/"
-            async with session.get(url) as resp:
-                if resp.status == 200:
+            async with session.get(url) as res:
+                if res.status == 200:
                     data = await resp.json()
                     await message.reply(data)
                 else:
-                    await message.answer(f"Ошибка {resp.status}: {resp.text}")
+                    await message.answer(f"Ошибка {res.status}: {res.text}")
 
 
 # Обработчик текстовых сообщений
