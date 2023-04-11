@@ -119,7 +119,7 @@ async def admin_help(message: Message, state: FSMContext):
                  "<code>/broadcast</code> - отправить сообщение всем пользователям бота\n"
                  "<code>/set_welcome</code> - установить приветственное сообщение для новых пользователей\n"
                  "<code>/set_admin</code> - добавить пользователя в администраторы\n"
-                 "<code>/remove_admin</code> - удалить пользователя из администраторов\n"
+                 
                  "<code>/cancel</code> - отменить текущее действие\n")
 
     await message.answer(help_text)
