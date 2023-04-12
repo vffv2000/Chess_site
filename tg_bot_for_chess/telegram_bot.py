@@ -5,7 +5,7 @@ import aiohttp
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Command
 from aiogram.types import Message
-
+from functools import wraps
 from aiogram.dispatcher import FSMContext
 
 # Установка уровня логирования
@@ -94,11 +94,6 @@ async def get_my_id(message: types.Message):
     await message.answer(user_id)
 
 
-
-
-
-from functools import wraps
-
 def is_admin(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
@@ -117,15 +112,32 @@ def is_admin(func):
 async def admin_help(message: Message, state: FSMContext):
     help_text = ("<b>Список доступных команд:</b>\n\n"
                  "<code>/broadcast</code> - отправить сообщение всем пользователям бота\n"
-                 "<code>/set_welcome</code> - установить приветственное сообщение для новых пользователей\n"
-                 "<code>/set_admin</code> - добавить пользователя в администраторы\n"
-                 
-                 "<code>/cancel</code> - отменить текущее действие\n")
+                 "<code>/add</code> - Добавить статью\n"
+                 "<code>/delete</code> - Удалить статью\n"
+                 "<code>/update</code> - Обновить статью\n")
 
     await message.answer(help_text)
 
 
-
+@dp.message_handler(commands=['delete'])
+@is_admin
+async def delete_post(message: Message):
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://127.0.0.1:8000/api/v1/Chess/') as resp:
+            data = await resp.json()
+            count = int(data['count'])
+            try:
+                symbol = int(message.text.split()[1])
+                if symbol < 0 or symbol >= count:
+                    raise ValueError
+            except (IndexError, ValueError, aiohttp.client_exceptions.ClientResponseError) as e:
+                await handle_error(message, e, count)
+                return
+            async with aiohttp.ClientSession() as session:
+                headers = {'Authorization': 'Token ' + 'e92f00fb7d2bd11e9bd117b5bfca90aa39fdf780'}
+                url = f"http://127.0.0.1:8000/api/v1/Chessdelete/{symbol}/"
+                async with session.delete(url, headers=headers) as resp:
+                   await message.answer("Запись успешно удалена")
 
 
 
