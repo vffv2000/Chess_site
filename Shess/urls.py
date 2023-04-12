@@ -30,6 +30,8 @@ urlpatterns = [
     path('api/v1/Chessdelete/<int:pk>/', ChessAPIDestroy.as_view()),
     path('api/v1/auth/', include('djoser.urls')),  # new
     re_path(r'^auth/', include('djoser.urls.authtoken')),  # new
+    # path('api/v1/accounts/', include('djoser.urls')), чтобы не ломалась форма авторизации
+    # path('api/v1/accounts/token/', include('djoser.urls.authtoken')),
     # path('api/v1/',include(router.urls))  # http://127.0.0.1:8000/api/v1/masters
 ]
 
